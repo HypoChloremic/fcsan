@@ -237,4 +237,4 @@ if __name__ == '__main__':
 	# run.saveplots(run.plot_3d, x="FSC-A",  z="APC-A", y="FITC-A", yfunc=_log, kind="scatter", transpose=False, save=True, description="FITC")
 	# run.limiter(channels=["SSC-A", "FSC-A"], xmax=2000)
 	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter")
-	run.saveplots(run.limiter, channels=["FSC-A", "SSC-A"], xmax=25000, save=True, description="limite")
+	# run.saveplots(run.limiter, channels=["FSC-A", "SSC-A"], xmax=25000, save=True, description="limite")

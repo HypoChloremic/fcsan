@@ -46,3 +46,8 @@ class fcsReader:
 								reformat_meta=True)
 		return self.meta
 
+	def save_data(self):
+		pass
+
+
+		
