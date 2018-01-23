@@ -168,7 +168,7 @@ class Analyze:
 			if log_overwrite and pos==0: 
 				with open(f"{folder}{logfile}", "w"):
 					pass
-			self.logger(file=name, logfile=f"{folder}{logfile}")
+			# self.logger(file=name, logfile=f"{folder}{logfile}")
 
 	def limiter(self, channels, dataset=None, xmax=None, xmin=None,ymax=None, ymin=None, nclusters=2, save=False, **kwargs):
 		print("[LIMITER] Running the limiter")
@@ -221,7 +221,8 @@ if __name__ == '__main__':
 	use("Agg")
 	run = Analyze()
 	run.read()
-	# run.kmeans(channels=["FSC-A", "SSC-A"], logx=False, logy=True, transpose=False, nclusters=3)
+	# print(run.meta)
+	# run.kmeans(channels=['FSC-A', 'SSC-A', 'FSC-H', 'FSC-W', 'SSC-H', 'SSC-W', 'FITC-A', 'FITC-H', 'PE-A', 'PE-H', 'PE-Cy7-A', 'PE-Cy7-H', 'UV1-A', 'UV1-H', 'UV2-A', 'UV2-H', 'APC-Cy7-A', 'APC-Cy7-H', 'APC-A', 'APC-H', 'PE-Cy5-A', 'PE-Cy5-H'], logx=False, logy=True, transpose=False, nclusters=5)
 	# run.plot(x="FSC-A", y="SSC-A",  kind="scatter", transpose=False)
 	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter", transpose=False)
 	# freq = run.freq("FSC-A", scope=500)
@@ -233,7 +234,7 @@ if __name__ == '__main__':
 	# run.saveplots(run.freq, column="FSC-A", scope=500, rdata=True, delimiter='\\')
 	# run.saveplots(run.plot, x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter", transpose=False, save=True, description="FSC-A_ON_SSC-A")
 	# print(run.dataset["SSC-A"])
-	# run.saveplots(run.kmeans, channels=["FSC-A", "SSC-A"], logx=False, logy=False, transpose=True, nclusters=4, description="kmeanS2", limit_dataset=None)
+	run.saveplots(run.kmeans, channels=['FSC-A', 'SSC-A', 'FSC-H', 'FSC-W', 'SSC-H', 'SSC-W', 'FITC-A', 'FITC-H', 'PE-A', 'PE-H', 'PE-Cy7-A', 'PE-Cy7-H', 'UV1-A', 'UV1-H', 'UV2-A', 'UV2-H', 'APC-Cy7-A', 'APC-Cy7-H', 'APC-A', 'APC-H', 'PE-Cy5-A', 'PE-Cy5-H'], logx=False, logy=True, transpose=False, nclusters=5, description="kmeanS2", limit_dataset=None)
 	# run.saveplots(run.plot_3d, x="FSC-A",  z="APC-A", y="FITC-A", yfunc=_log, kind="scatter", transpose=False, save=True, description="FITC")
 	# run.limiter(channels=["SSC-A", "FSC-A"], xmax=2000)
 	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter")
