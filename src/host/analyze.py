@@ -12,8 +12,7 @@
 # We should look on SSC-A on FSC-A, then FSC-H on FSC-W, then
 # APC-A on SSC-A, count on APC-A, then APC-A on SSC-A
 
-
-from  fcsreader import fcsReader
+from fcsreader import fcsReader
 from subprocess import call
 from sklearn.cluster import KMeans
 from pandas import DataFrame as df
@@ -21,11 +20,13 @@ from pandas import concat, cut
 from math import log
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt, mpld3
+from mpld3 import plugins, utils
 from matplotlib import use
 import seaborn
 import os
-__version__ = "0.12a"
+
+__version__ = "0.15a"
 
 class Analyze:
 	def __init__(self, config="config/config.yaml", pos=0, name=None, *args, **kwargs):
@@ -213,29 +214,29 @@ class Analyze:
 		with open(logfile, state) as file:
 			file.write(to_write)
 
+
+	def gen_html(self, dataset=None, channels=["FSC-A", "SSC-A"]):
+		if not dataset: dataset = self.dataset
+		data = [dataset[i].values for i in channels] 
+
+
+		fig  = plt.figure()
+		ax   = fig.add_subplot(111)
+		plot = ax.scatter(data[0], data[1])
+		plugins.connect(fig, plugins.LinkedBrush(plot))
+		
+		with open("the_figure.html", "w") as file:
+			file.write(mpld3.fig_to_html(fig))
+		
+
 def _log(i):
 	if i > 0: return log(i)
 	else: return None
 
 if __name__ == '__main__':
 	use("Agg")
+	print("Running")
 	run = Analyze()
+	print("Reading")
 	run.read()
-	# print(run.meta)
-	# run.kmeans(channels=['FSC-A', 'SSC-A', 'FSC-H', 'FSC-W', 'SSC-H', 'SSC-W', 'FITC-A', 'FITC-H', 'PE-A', 'PE-H', 'PE-Cy7-A', 'PE-Cy7-H', 'UV1-A', 'UV1-H', 'UV2-A', 'UV2-H', 'APC-Cy7-A', 'APC-Cy7-H', 'APC-A', 'APC-H', 'PE-Cy5-A', 'PE-Cy5-H'], logx=False, logy=True, transpose=False, nclusters=5)
-	# run.plot(x="FSC-A", y="SSC-A",  kind="scatter", transpose=False)
-	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter", transpose=False)
-	# freq = run.freq("FSC-A", scope=500)
-	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter", transpose=False, save=True)
-	# plt.show()
-	# plt.savefig("blah.png")
-	# print(freq[])
-	# run.plot(x=freq[0], y=run.dataset["FSC-A"], kind="scatter")
-	# run.saveplots(run.freq, column="FSC-A", scope=500, rdata=True, delimiter='\\')
-	# run.saveplots(run.plot, x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter", transpose=False, save=True, description="FSC-A_ON_SSC-A")
-	# print(run.dataset["SSC-A"])
-	run.saveplots(run.kmeans, channels=['FSC-A', 'SSC-A', 'FSC-H', 'FSC-W', 'SSC-H', 'SSC-W', 'FITC-A', 'FITC-H', 'PE-A', 'PE-H', 'PE-Cy7-A', 'PE-Cy7-H', 'UV1-A', 'UV1-H', 'UV2-A', 'UV2-H', 'APC-Cy7-A', 'APC-Cy7-H', 'APC-A', 'APC-H', 'PE-Cy5-A', 'PE-Cy5-H'], logx=False, logy=True, transpose=False, nclusters=5, description="kmeanS2", limit_dataset=None)
-	# run.saveplots(run.plot_3d, x="FSC-A",  z="APC-A", y="FITC-A", yfunc=_log, kind="scatter", transpose=False, save=True, description="FITC")
-	# run.limiter(channels=["SSC-A", "FSC-A"], xmax=2000)
-	# run.plot(x="FSC-A", y="SSC-A", yfunc=_log, kind="scatter")
-	# run.saveplots(run.limiter, channels=["FSC-A", "SSC-A"], xmax=25000, save=True, description="limite")
+	run.gen_html()
