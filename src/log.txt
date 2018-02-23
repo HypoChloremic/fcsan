@@ -1,0 +1,6 @@
+**************
+Sample: C:\\Users\\Ali Rassolie\\Desktop\\Emb_data\\exporteddebrisembla\160329_ND244\71956.fcs
+ debris/total: 100.0%
+**************
+Sample: C:\\Users\\Ali Rassolie\\Desktop\\Emb_data\\exporteddebrisembla\160329_ND244\71956.fcs
+ debris/total: 100.0%

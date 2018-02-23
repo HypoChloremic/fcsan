@@ -12,21 +12,24 @@
 # We should look on SSC-A on FSC-A, then FSC-H on FSC-W, then
 # APC-A on SSC-A, count on APC-A, then APC-A on SSC-A
 
-from fcsreader import fcsReader
-from subprocess import call
-from sklearn.cluster import KMeans
-from pandas import DataFrame as df
-from pandas import concat, cut
-from math import log
 from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-import matplotlib.pyplot as plt, mpld3
-from mpld3 import plugins, utils
+from sklearn.cluster      import KMeans
+from pandas     import DataFrame as df
+from pandas     import concat, cut
+from fcsreader  import fcsReader
+from subprocess import call
+from math       import log
+from mpld3      import plugins, utils
 from matplotlib import use
+from bs4	    import BeautifulSoup as bs
+from plotly.graph_objs import Scatter, Layout
+import numpy as np
+import plotly as ply
+import matplotlib.pyplot as plt, mpld3
 import seaborn
 import os
 
-__version__ = "0.15a"
+__version__ = "0.2"
 
 class Analyze:
 	def __init__(self, config="config/config.yaml", pos=0, name=None, *args, **kwargs):
@@ -39,7 +42,6 @@ class Analyze:
 		with open(config, "r") as file:
 			self.config = {i.split(": ")[0]: i.split(": ")[1].replace("\n", "") for i in file.readlines()}
 			self.path   = self.config["PARENT"] 
-
 
 		print(f"[GLOBAL] The parent-path: {self.path}")
 		
@@ -54,11 +56,11 @@ class Analyze:
 
 	def __files(self, top=None, delimiter="\\", **kwargs):
 		if not top: top=self.path
-		print(top)
+
 		self.files = [f"{i[0]}{delimiter}{k}" for i in os.walk(top) for k in i[-1] if k.endswith(".fcs")]
 		if self.name: self.file = [i for i in self.files if self.name in i][0]
 		else: 
-			self.file = self.files[self.pos]		
+			self.file  = self.files[self.pos]
 			self.names = [f"{i.split(delimiter)[-2]}_{i.split(delimiter)[-1]}" for i in self.files]
 
   ########################
@@ -223,20 +225,46 @@ class Analyze:
 		fig  = plt.figure()
 		ax   = fig.add_subplot(111)
 		plot = ax.scatter(data[0], data[1])
-		plugins.connect(fig, plugins.LinkedBrush(plot))
+		plugins.clear(fig)
+		plugins.connect(fig, plugins.LinkedBrush(plot), plugins.ClickSendToBack(plot))
 		
-		with open("the_figure.html", "w") as file:
-			file.write(mpld3.fig_to_html(fig))
-		
+		the_html = mpld3.fig_to_html(fig)
+
+		with open("initialfigure.html", "w") as file:
+			file.write(the_html)
+
+		o = bs(open("initialfigure.html"), "html.parser")
+		script = str(o.find_all("script")[0])
+		script_2 = script.replace("<script>","").replace("</script>","")
+
+		with open("the_figure.js", "w") as file:
+			file.write(script_2)
+
+		with open("the_figure.html", "w") as file: 
+			the_html = the_html.replace(script, "<script src='.\\the_figure.js'></script>")
+			file.write(the_html)
+
+
+	def gen_html_ply(self, dataset=None, channels=["FSC-A", "SSC-A"]):
+		if not dataset: dataset = self.dataset
+		data = [dataset[i].values for i in channels] 
+
+		# Note that u should be looking for the zoomlayer class, 
+		# to get the box selection
+		ply.offline.plot({"data":[Scatter(x=data[0], y=data[1], mode="markers")]}, )
+
+
+
+
+
 
 def _log(i):
 	if i > 0: return log(i)
 	else: return None
 
+
 if __name__ == '__main__':
 	use("Agg")
-	print("Running")
 	run = Analyze()
-	print("Reading")
-	run.read()
-	run.gen_html()
+	run.read(file="C:\\Users\\Ali Rassolie\\Desktop\\Emb_data\\exporteddebrisembla\\160420_O8-289\\72307.fcs")
+	run.gen_html_ply()

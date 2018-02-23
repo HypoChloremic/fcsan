@@ -1,0 +1,84 @@
+html, body {
+  height: 100%;
+}
+
+body {
+	background: white;
+
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  
+  /*justify-content: center;*/
+  align-items: center;
+
+}
+
+.topBar{
+	/*background: grey;*/
+	position: top;
+	display: block;
+	padding: 10px;
+	margin: 10px;
+	width: 100%;
+}
+
+.topBar h4{
+	font: impact;
+	color: blue;
+}
+
+.topBar .badge::before{
+	
+}
+
+.topBar .badge::after{
+	
+}
+
+.topBar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+.topBar li {
+    float: left;
+}
+
+/*.topBar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+*/
+/* Change the link color to #111 (black) on hover */
+/*.topBar li a:hover {
+    background-color: #111;
+}
+*/
+
+
+.topBar .badge{
+	/*float: left;*/
+
+	font: impact;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.topBar .badge:hover{
+	overflow: auto;
+	background-color: #111;
+
+/*This property is important*/
+	cursor: pointer;
+}
